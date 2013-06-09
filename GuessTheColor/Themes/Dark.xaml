@@ -1,0 +1,35 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mscorlib="clr-namespace:System;assembly=mscorlib"
+    xmlns:imaging="clr-namespace:System.Windows.Media.Imaging;assembly=System.Windows">
+
+    <BitmapImage x:Key="BgImage" UriSource="/Images/Dark/HomePageBackground.png"/>
+    <BitmapImage x:Key="LogoFull" UriSource="/Images/Dark/WP7Logo.png"/>
+    <BitmapImage x:Key="Logo" UriSource="/Images/Dark/TelerikLogo.png"/>
+    <BitmapImage x:Key="InnerScreens" UriSource="/Images/Dark/InnerScreensBackground.png"/>
+    <BitmapImage x:Key="ControlHomeBackground" UriSource="/Images/Dark/ControlHomeScreensBackground.png"/>
+    <BitmapImage x:Key="AddFavoriteExample" UriSource="/Images/Dark/AddFavoriteExample.png"/>
+    <ImageBrush x:Key="QSFPanoramaBackgroundBrush" ImageSource="{StaticResource BgImage}"/>
+    <ImageBrush x:Key="InnerScreensBrush" ImageSource="{StaticResource InnerScreens}"/>
+    <ImageBrush x:Key="ControlHomeBackgroundBrush" ImageSource="{StaticResource ControlHomeBackground}"/>
+    <SolidColorBrush x:Key="ModalWindowBackground" Color="#CC000000"/>
+    <SolidColorBrush x:Key="ContextMenuBackground" Color="#FFFFFFFF"/>
+    <BitmapImage x:Key="CloseCircleImageNormal" UriSource="/Images/Dark/CloseCircleImageNormal.png"/>
+    <BitmapImage x:Key="CloseCircleImagePressed" UriSource="/Images/Dark/CloseCircleImagePressed.png"/>
+    <ImageBrush x:Key="CloseCircleBrushNormal" ImageSource="{StaticResource CloseCircleImageNormal}"/>
+    <ImageBrush x:Key="CloseCircleBrushPressed" ImageSource="{StaticResource CloseCircleImagePressed}"/>
+    <SolidColorBrush x:Key="AppBarBackground" Color="#FF01636a"/>
+    <BitmapImage x:Key="ArrowDownNormal" UriSource="/Images/Dark/ArrowDownNormal.png"/>
+    <BitmapImage x:Key="ArrowDownPressed" UriSource="/Images/Dark/ArrowDownPressed.png"/>
+    <BitmapImage x:Key="Separator" UriSource="/Images/Dark/Separator.png"/>
+    <BitmapImage x:Key="GaugesFirstLookLogo" UriSource="/Images/Dark/GaugesFirstLookLogo.png"/>
+    <BitmapImage x:Key="PageHeader" UriSource="/Images/Dark/PageHeader.png"/>
+    <BitmapImage x:Key="MailAttachmentIcon" UriSource="/Images/Dark/DataBoundListBox.CheckBoxes/AttachmentIcon.png"/>
+    <BitmapImage x:Key="LoopingOrientationMask" UriSource="/Images/Dark/LoopingList.Orientation/Mask-dark.png"/>
+    <BitmapImage x:Key="PinToStart" UriSource="/Images/Dark/PinToStart.png"/>
+    <BitmapImage x:Key="PinToStartPressed" UriSource="/Images/Dark/PinToStartPressed.png"/>
+    <imaging:BitmapImage x:Key="PaginationLeftArrow" UriSource="/Images/Dark/LeftArrow.png"/>
+    <imaging:BitmapImage x:Key="PaginationRightArrow" UriSource="/Images/Dark/RightArrow.png"/>
+    <SolidColorBrush Color="Black" x:Key="SolidBackgroundBrush"/>
+</ResourceDictionary>

@@ -1,0 +1,263 @@
+﻿<phone:PhoneApplicationPage xmlns:telerik="http://schemas.telerik.com/windowsphone"  
+    x:Class="GuessTheColor.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:telerikCore="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Core"
+    xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
+    xmlns:telerikInput="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Input"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="False">
+
+    <UserControl.Resources>
+        <Style x:Key="emptyRectangleStyle" TargetType="Rectangle">
+            <Setter Property="RadiusX" Value="10"/>
+            <Setter Property="RadiusY" Value="10"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Margin" Value="5,4"/>
+            <Setter Property="Stroke" Value="AntiqueWhite"/>
+            <Setter Property="StrokeThickness" Value="3"/>
+        </Style>
+
+        <Style x:Key="hintRectangleStyle" TargetType="Rectangle">
+            <Setter Property="RadiusX" Value="20"/>
+            <Setter Property="RadiusY" Value="20"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Margin" Value="2,4"/>
+            <Setter Property="Stroke" Value="Transparent"/>
+            <Setter Property="StrokeThickness" Value="2"/>
+        </Style>
+
+        <Style x:Key="clickButtonStype" TargetType="Button">
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Width" Value="60"/>
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+
+    </UserControl.Resources>
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent" ShowGridLines="False" Margin="0,0,0,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1.5*"/>
+            <RowDefinition Height="7*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <!--Popup Window -->
+        <telerikPrimitives:RadModalWindow x:Name="window"
+                                          Background="Transparent"
+                                          Placement="CenterCenter" 
+                                          IsOpen="{Binding GameOverSuccess,Mode=TwoWay}">
+            <Border BorderBrush="{StaticResource PhoneBorderBrush}"
+                    BorderThickness="{StaticResource PhoneBorderThickness}">
+                <Grid Background="{StaticResource PhoneBackgroundBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.ColumnSpan="2"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Bottom"
+                               Margin="{StaticResource PhoneMargin}">
+                        Game over!
+                        Do you want to continue?
+                    </TextBlock>
+
+                    <Button x:Name="btnNewGame" Grid.Row="1" Grid.Column="0" Content="New Game" Command="{Binding OkCommand}"/>
+                    <Button x:Name="btnExit" Grid.Row="1" Grid.Column="1" Content="Exit" Command="{Binding ExitCommand}"/>
+                </Grid>
+            </Border>
+
+            <telerikPrimitives:RadModalWindow.OpenAnimation>
+                <telerikCore:RadPlaneProjectionAnimation CenterY="0.5" CenterX="0" StartAngleX="-90" EndAngleX="0" Axes="X">
+                    <telerikCore:RadPlaneProjectionAnimation.Easing>
+                        <CubicEase EasingMode="EaseOut"/>
+                    </telerikCore:RadPlaneProjectionAnimation.Easing>
+                </telerikCore:RadPlaneProjectionAnimation>
+            </telerikPrimitives:RadModalWindow.OpenAnimation>
+
+        </telerikPrimitives:RadModalWindow>
+
+        <telerikPrimitives:RadWrapPanel Grid.Column="0" Grid.Row="0" Margin="10,2" Orientation="Vertical" IsAnimated="True" FlowDirection="RightToLeft">
+            <Grid ShowGridLines="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            
+                <Rectangle Grid.Row="0" Grid.Column="0" Fill="Green" Style="{StaticResource hintRectangleStyle}"/>
+                <TextBlock Grid.Column="1" Text="Right Color" Margin="2,-4,-2,4" />
+                <Rectangle Grid.Row="1" Grid.Column="0" Fill="Red" Style="{StaticResource hintRectangleStyle}"/>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Wrong Color"/>
+                <Rectangle Grid.Row="2" Grid.Column="0" Fill="Yellow" Style="{StaticResource hintRectangleStyle}" />
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Right Color Wrong Position" />
+            </Grid>
+        </telerikPrimitives:RadWrapPanel>
+        
+        <StackPanel Grid.Row="1" Margin="5,15,0,0" Orientation="Vertical" HorizontalAlignment="Right"  >
+            <telerikPrimitives:RadDataBoundListBox Margin="{StaticResource PhoneHorizontalMargin}" IsCheckModeEnabled="False" x:Name="listBoxHeader">
+                <telerikPrimitives:RadDataBoundListBox.ItemAddedAnimation>
+                    <telerikCore:RadMoveAnimation StartPoint="500, 0" EndPoint="0, 0" Duration="0:0:1">
+                        <telerikCore:RadMoveAnimation.Easing>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </telerikCore:RadMoveAnimation.Easing>
+                    </telerikCore:RadMoveAnimation>
+                </telerikPrimitives:RadDataBoundListBox.ItemAddedAnimation>
+                <telerikPrimitives:RadDataBoundListBox.ItemRemovedAnimation>
+                    <telerikCore:RadMoveAnimation StartPoint="0, 0" EndPoint="500, 0" Duration="0:0:01">
+                        <telerikCore:RadMoveAnimation.Easing>
+                            <CubicEase EasingMode="EaseIn"/>
+                        </telerikCore:RadMoveAnimation.Easing>
+                    </telerikCore:RadMoveAnimation>
+                </telerikPrimitives:RadDataBoundListBox.ItemRemovedAnimation>
+                <telerikPrimitives:RadDataBoundListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Right">
+                            <Rectangle Fill="{Binding Field1.Color, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+                            <Rectangle Fill="{Binding Field2.Color, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+                            <Rectangle Fill="{Binding Field3.Color, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+                            <Rectangle Fill="{Binding Field4.Color, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+
+                            <Grid>
+                                <Rectangle Fill="{Binding Field1.HeaderColor, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                <TextBlock Text="{Binding Field1.HeaderText}" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                            <Grid>
+                                <Rectangle Fill="{Binding Field2.HeaderColor, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                <TextBlock Text="{Binding Field2.HeaderText}" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                            <Grid>
+                                <Rectangle Fill="{Binding Field3.HeaderColor, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                <TextBlock Text="{Binding Field3.HeaderText}" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                            <Grid>
+                                <Rectangle Fill="{Binding Field4.HeaderColor, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                <TextBlock Text="{Binding Field4.HeaderText}" FontSize="30" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </telerikPrimitives:RadDataBoundListBox.ItemTemplate>
+            </telerikPrimitives:RadDataBoundListBox>
+        </StackPanel>
+        
+        <StackPanel Grid.Column="1" Grid.RowSpan="2">
+            <Rectangle Height="700" Width="1" HorizontalAlignment="Left">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStopCollection>
+                            <GradientStop Color="Transparent" Offset="0.0"></GradientStop>
+                            <GradientStop Color="DarkOrange" Offset="0.9"></GradientStop>
+                        </GradientStopCollection>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </StackPanel>
+        
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0,0,0,5" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+            <telerikPrimitives:RadDataBoundListBox Margin="12,2,12,-2" IsCheckModeEnabled="False" x:Name="listBox">
+                <telerikPrimitives:RadDataBoundListBox.ItemAddedAnimation>
+                    <telerikCore:RadMoveAnimation StartPoint="500, 0" EndPoint="0, 0" Duration="0:0:1">
+                        <telerikCore:RadMoveAnimation.Easing>
+                            <CubicEase EasingMode="EaseOut"/>
+                        </telerikCore:RadMoveAnimation.Easing>
+                    </telerikCore:RadMoveAnimation>
+                </telerikPrimitives:RadDataBoundListBox.ItemAddedAnimation>
+                <telerikPrimitives:RadDataBoundListBox.ItemRemovedAnimation>
+                    <telerikCore:RadMoveAnimation StartPoint="0, 0" EndPoint="500, 0" Duration="0:0:01">
+                        <telerikCore:RadMoveAnimation.Easing>
+                            <CubicEase EasingMode="EaseIn"/>
+                        </telerikCore:RadMoveAnimation.Easing>
+                    </telerikCore:RadMoveAnimation>
+                </telerikPrimitives:RadDataBoundListBox.ItemRemovedAnimation>
+
+                <telerikPrimitives:RadDataBoundListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="Red" BorderThickness="0" CornerRadius="0" Margin="0">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Right">
+                                    <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Left">
+                                        <Rectangle Fill="{Binding Field1.HintColor, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+                                        <Rectangle Fill="{Binding Field2.HintColor, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+                                        <Rectangle Fill="{Binding Field3.HintColor, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
+                                        <Rectangle Fill="{Binding Field4.HintColor, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" Margin="0,0,40,0" />
+                                    </StackPanel>
+                                        <Rectangle Fill="{Binding Field1.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                        <Rectangle Fill="{Binding Field2.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                        <Rectangle Fill="{Binding Field3.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                        <Rectangle Fill="{Binding Field4.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}"  />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </telerikPrimitives:RadDataBoundListBox.ItemTemplate>
+            </telerikPrimitives:RadDataBoundListBox>
+        </Grid>
+
+
+        <StackPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
+            <Rectangle Width="450" Height="1" HorizontalAlignment="Left">
+                <Rectangle.Fill>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStopCollection>
+                            <GradientStop Color="Transparent" Offset="0.0"></GradientStop>
+                            <GradientStop Color="DarkOrange" Offset="0.9"></GradientStop>
+                        </GradientStopCollection>
+                    </LinearGradientBrush>
+                </Rectangle.Fill>
+            </Rectangle>
+        </StackPanel>
+        <StackPanel  Grid.Row="3" Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Stretch" HorizontalAlignment="Center" Grid.ColumnSpan="2">
+            <Button Background="{Binding GameColors.Color1}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
+            <Button Background="{Binding GameColors.Color2}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
+            <Button Background="{Binding GameColors.Color3}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
+            <Button Background="{Binding GameColors.Color4}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
+            <Button Background="{Binding GameColors.Color5}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
+            <Button Background="{Binding GameColors.Color6}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
+        </StackPanel>
+        <TextBlock x:Name="PageTitle" Text="guess the color" Margin="380,-130,-440,-45" Style="{StaticResource PhoneTextTitle1Style}"  FontSize="64" Height="98" Width="500" Grid.Row="2" Grid.ColumnSpan="2" Foreground="White">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                        <RotateTransform Angle="-90" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+    </Grid>
+    
+    
+    <!--Sample code showing usage of ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True"  Mode="Minimized">
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="New Game" Click="OnNewGameClick" />
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Reset" Click="OnResetClick"/>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    
+</phone:PhoneApplicationPage>
