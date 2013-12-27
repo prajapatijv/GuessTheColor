@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 using Framework.MVVM;
+using System.Windows.Threading;
 
 namespace GuessTheColor
 {
@@ -18,11 +19,18 @@ namespace GuessTheColor
         //private ICommand newGameCommand;
 
         private GameColors gameColors;
+        private Scores _scores;
+
+        //private Time timeTracker;
+        private DispatcherTimer dtm = new DispatcherTimer();
 
         #region ctor
 
         public GameViewModel()
         {
+            this._scores = new Scores();
+            this._currentScore = new Score();
+
             this.gameColors = new GameColors();
             
             rows = new ObservableCollection<Row>();
@@ -33,11 +41,59 @@ namespace GuessTheColor
             //this.resetCommand = new DelegateCommand(new Action<object>((p) => this.Reset()));
 
             this.NewGame();
+
+            dtm.Interval = TimeSpan.FromSeconds(1);
+            dtm.Tick += OnTimerTick;
+        }
+
+        void OnTimerTick(Object s, EventArgs e)
+        {
+            this.CurrentScore.Increment();
         }
 
         #endregion
 
         #region Property
+
+        public Scores Scores {
+            get
+            {
+                return _scores;
+            }
+            set
+            {
+                _scores = value;
+                this.OnPropertyChanged("Scores");
+            }
+        }
+
+        public Score CurrentScore
+        {
+            get
+            {
+                return _currentScore;
+            }
+            set
+            {
+                _currentScore = value;
+                this.OnPropertyChanged("CurrentScore");
+            }
+        }
+        private Score _currentScore;
+
+        public bool Paused
+        {
+            get
+            {
+                return this.paused;
+            }
+            set
+            {
+                this.paused = value;
+                this.OnPropertyChanged("Paused");
+            }
+        }
+        private bool paused;
 
         public StateEnum GameState
         {
@@ -51,26 +107,49 @@ namespace GuessTheColor
                 this.OnPropertyChanged("GameState");
                 if (gameState == StateEnum.GameOverSuccess)
                 {
+                    this.dtm.Stop();
                     this.GameOverSuccess = true;
                     this.GameOverFailure = false;
+                    this.GameOver = true;
                 }
                 else if (gameState == StateEnum.GameOverFailure)
                 {
+                    this.dtm.Stop();
                     this.GameOverSuccess = false;
                     this.GameOverFailure = true;
+                    this.GameOver = true;
                 }
                 else
                 {
                     this.GameOverSuccess = false;
                     this.GameOverFailure = false;
+                    this.GameOver = false;
                 }
 
             }
         }
         private StateEnum gameState;
 
+        public bool GameOver
+        {
+            get
+            {
+                return this.gameOver;
+            }
+            set
+            {
+                this.gameOver = value;
+                this.OnPropertyChanged("GameOver");
+            }
+        }
+        private bool gameOver;
+
         public bool GameOverFailure
         {
+            get
+            {
+                return !GameOverSuccess;
+            }
             set
             {
                 gameOverFailure = value;
@@ -193,10 +272,29 @@ namespace GuessTheColor
 
             currentRow = rows.Last();
             this.GameState = StateEnum.NewGame;
+            this.CurrentScore.Reset();
+            this.dtm.Start();
+        }
+
+        public void Pause()
+        {
+            if (dtm.IsEnabled)
+            {
+                dtm.Stop();
+                this.Paused = true;
+            }
+            else
+            {
+                dtm.Start();
+                this.Paused = false;
+            }
         }
 
         public void OnColorClick(Brush color)
         {
+            if (this.Paused)
+                return;
+
             StateEnum state = RowFilledState();
 
             switch (state)
@@ -241,7 +339,13 @@ namespace GuessTheColor
                 if (IsGameOver())
                 {
                     state = StateEnum.GameOverSuccess;
-                    this.GameState = StateEnum.GameOverSuccess; 
+                    this.GameState = StateEnum.GameOverSuccess;
+                    // Game over
+                }
+                else if (this.currentRow.Id == this.rows.Min(i=> i.Id))
+                {
+                    state = StateEnum.GameOverFailure;
+                    this.GameState = StateEnum.GameOverFailure;
                     // Game over
                 }
             }
@@ -291,6 +395,7 @@ namespace GuessTheColor
             {
                 field.Color = color;
                 field.State = FieldStateEnum.Filled;
+                
                 return StateEnum.FieldFilled;
             }
 

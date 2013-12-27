@@ -66,6 +66,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MVVM\Converters.cs" />
     <Compile Include="Utility\Utility.cs" />
     <Compile Include="ViewModel\Field.cs" />
     <Compile Include="ViewModel\GameViewModel.cs" />

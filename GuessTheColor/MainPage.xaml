@@ -9,6 +9,7 @@
     xmlns:telerikCore="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Core"
     xmlns:telerikPrimitives="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Primitives"
     xmlns:telerikInput="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.Input"
+    xmlns:localConverters="clr-namespace:Framework.MVVM.Converters"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="728"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -17,6 +18,8 @@
     shell:SystemTray.IsVisible="False">
 
     <UserControl.Resources>
+        <localConverters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter">
+        </localConverters:BooleanToVisibilityConverter>
         <Style x:Key="emptyRectangleStyle" TargetType="Rectangle">
             <Setter Property="RadiusX" Value="10"/>
             <Setter Property="RadiusY" Value="10"/>
@@ -61,30 +64,61 @@
         <telerikPrimitives:RadModalWindow x:Name="window"
                                           Background="Transparent"
                                           Placement="CenterCenter" 
-                                          IsOpen="{Binding GameOverSuccess,Mode=TwoWay}">
+                                          IsOpen="{Binding GameOver}"
+                                          MinWidth="600">
+            
             <Border BorderBrush="{StaticResource PhoneBorderBrush}"
-                    BorderThickness="{StaticResource PhoneBorderThickness}">
+                    BorderThickness="{StaticResource PhoneBorderThickness}" 
+                    CornerRadius="0">
                 <Grid Background="{StaticResource PhoneBackgroundBrush}">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Row="0"
-                               Grid.ColumnSpan="2"
-                               TextWrapping="Wrap"
-                               VerticalAlignment="Bottom"
-                               Margin="{StaticResource PhoneMargin}">
-                        Game over!
-                        Do you want to continue?
-                    </TextBlock>
+                    <StackPanel Grid.Row="0"
+                                Grid.ColumnSpan="2" VerticalAlignment="Bottom"                                    
+                                Margin="{StaticResource PhoneMargin}"
+                                MinWidth="900">
+                        <TextBlock TextWrapping="Wrap" FontSize="30" Style="{StaticResource PhoneTextTitle1Style}"
+                                   Visibility="{Binding GameOverSuccess, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            Congratulations!  Well Played!
+                            <LineBreak></LineBreak>
+                        </TextBlock>
 
+                        <TextBlock TextWrapping="Wrap" FontSize="28" Style="{StaticResource PhoneTextTitle1Style}"
+                                   Visibility="{Binding GameOverFailure, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            Hard luck! Try again your skills!
+                            <LineBreak></LineBreak>
+                        </TextBlock>
+
+                        <StackPanel Orientation="Vertical" Margin="0,0">
+                            <TextBlock FontSize="24" Style="{StaticResource PhoneTextTitle1Style}">Player Name</TextBlock>
+                            <TextBox Text="{Binding CurrentScore.PlayerName, Mode=TwoWay}" ></TextBox>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" Margin="10,0">
+                            <TextBlock Margin="1" FontSize="28" Text="Time Taken : " Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                            <TextBlock Margin="1" FontSize="28" Text=":" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Second, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0">
+                            <TextBlock Margin="1" FontSize="28" Text="Best Time : " Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                            <TextBlock Margin="1" FontSize="28" Text=":" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Second, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                        </StackPanel>
+
+                    </StackPanel>
+                    
                     <Button x:Name="btnNewGame" Grid.Row="1" Grid.Column="0" Content="New Game" Command="{Binding OkCommand}"/>
-                    <Button x:Name="btnExit" Grid.Row="1" Grid.Column="1" Content="Exit" Command="{Binding ExitCommand}"/>
+                    <Button x:Name="btnExit" Grid.Row="1" Grid.Column="1" Content="Back" Command="{Binding ExitCommand}"/>
+                    
                 </Grid>
             </Border>
 
@@ -194,7 +228,6 @@
                         </telerikCore:RadMoveAnimation.Easing>
                     </telerikCore:RadMoveAnimation>
                 </telerikPrimitives:RadDataBoundListBox.ItemRemovedAnimation>
-
                 <telerikPrimitives:RadDataBoundListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="Red" BorderThickness="0" CornerRadius="0" Margin="0">
@@ -206,8 +239,8 @@
                                         <Rectangle Fill="{Binding Field3.HintColor, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" />
                                         <Rectangle Fill="{Binding Field4.HintColor, Mode=OneWay}" Style="{StaticResource hintRectangleStyle}" Margin="0,0,40,0" />
                                     </StackPanel>
-                                        <Rectangle Fill="{Binding Field1.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
-                                        <Rectangle Fill="{Binding Field2.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                    <Rectangle Fill="{Binding Field1.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
+                                    <Rectangle Fill="{Binding Field2.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
                                         <Rectangle Fill="{Binding Field3.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}" />
                                         <Rectangle Fill="{Binding Field4.Color, Mode=OneWay}" Style="{StaticResource emptyRectangleStyle}"  />
                                 </StackPanel>
@@ -239,6 +272,28 @@
             <Button Background="{Binding GameColors.Color5}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
             <Button Background="{Binding GameColors.Color6}" Click="ColorButton_Click" Style="{StaticResource clickButtonStype}"></Button>
         </StackPanel>
+
+        <TextBlock Margin="25,39.5,4.5,432.5" Text="{Binding Path=CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}" FontSize="36" Height="50" Grid.Row="1" Foreground="#1f2121" UseLayoutRounding="False" d:LayoutRounding="Auto" Grid.Column="1">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="-90" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+        <TextBlock Margin="25,108,6,476" Text="{Binding Path=CurrentScore.ScoreTime.Second,StringFormat=D2}"  Style="{StaticResource PhoneTextTitle1Style}"  FontWeight="Bold" FontSize="36" Height="50" Foreground="#292b2b" UseLayoutRounding="False" d:LayoutRounding="Auto" Grid.Column="1" Grid.RowSpan="2">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform />
+                    <SkewTransform />
+                    <RotateTransform Angle="-90" />
+                    <TranslateTransform />
+                </TransformGroup>
+            </TextBlock.RenderTransform>
+        </TextBlock>
+
         <TextBlock x:Name="PageTitle" Text="guess the color" Margin="380,-130,-440,-45" Style="{StaticResource PhoneTextTitle1Style}"  FontSize="64" Height="98" Width="500" Grid.Row="2" Grid.ColumnSpan="2" Foreground="White">
             <TextBlock.RenderTransform>
                 <TransformGroup>
@@ -254,9 +309,10 @@
     
     <!--Sample code showing usage of ApplicationBar-->
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True"  Mode="Minimized">
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True"  Mode="Default">
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="New Game" Click="OnNewGameClick" />
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Reset" Click="OnResetClick"/>
+            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button3.png" Text="Pause" Click="OnPauseClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     

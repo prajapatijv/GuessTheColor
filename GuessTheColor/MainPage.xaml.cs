@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
+using System.Windows.Media;
 
 namespace GuessTheColor
 {
@@ -25,7 +26,6 @@ namespace GuessTheColor
         {
             var btn = sender as Button;
             gameViewModel.OnColorClick(btn.Background);
-            //this.listBox.ItemsSource = this.gameViewModel.Rows;
         }
 
         private void OnNewGameClick(object sender, EventArgs e)
@@ -37,6 +37,63 @@ namespace GuessTheColor
         {
             gameViewModel.Reset();
         }
+
+        private void OnPauseClick(object sender, EventArgs e)
+        {
+            gameViewModel.Pause();
+        }
+
+        private ChildControl FindVisualChild<ChildControl>(DependencyObject DependencyObj) where ChildControl : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(DependencyObj); i++)
+            {
+                DependencyObject Child = VisualTreeHelper.GetChild(DependencyObj, i);
+
+                if (Child != null && Child is ChildControl)
+                {
+                    return (ChildControl)Child;
+                }
+                else
+                {
+                    ChildControl ChildOfChild = FindVisualChild<ChildControl>(Child);
+
+                    if (ChildOfChild != null)
+                    {
+                        return ChildOfChild;
+                    }
+                }
+            }
+            return null;
+        }
+        /*
+        private void GetSelectedCheckObjItem()
+        {
+            try
+            {
+                for (int i = 0; i < listBox.ItemCount; i++)
+                {
+                    // Get a all list items from listbox
+                    ListBoxItem ListBoxItemObj = (ListBoxItem)listBox.ItemContainerGenerator.ContainerFromItem(listBox1.Items[i]);
+
+                    // find a ContentPresenter of that list item.. [Call FindVisualChild Method]
+                    ContentPresenter ContentPresenterObj = FindVisualChild<ContentPresenter>(ListBoxItemObj);
+
+                    // call FindName on the DataTemplate of that ContentPresenter
+                    DataTemplate DataTemplateObj = ContentPresenterObj.ContentTemplate;
+                    CheckBox Chk = (CheckBox)DataTemplateObj.FindName("ChkList", ContentPresenterObj);
+
+                    // get a selected checkbox items.
+                    if (Chk.IsChecked == true)
+                    {
+                        MessageBox.Show(Chk.Content.ToString().Trim());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }*/
 
     }
 }

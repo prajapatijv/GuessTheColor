@@ -2,6 +2,9 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Media;
+using System.IO.IsolatedStorage;
+using System.IO;
+using Framework.MVVM;
 
 namespace GuessTheColor
 {
@@ -78,5 +81,132 @@ namespace GuessTheColor
         GameOverFailure = 5,
         GameOverSuccess = 6,
         NotSet = 7
+    }
+
+    public class Time
+    {
+        public Time(byte hour, byte minute, byte second)
+        {
+            this.Hour = hour;
+            this.Minute = minute;
+            this.Second = second;
+        }
+
+        public byte Hour { get; set; }
+        public byte Minute { get; set; }
+        public byte Second { get; set; }
+
+        public Time Increment()
+        {
+            this.Second += 1;
+            if (this.Second == 60)
+            {
+                this.Second = 0;
+                this.Minute += 1;
+            }
+            if (this.Minute == 60)
+            {
+                this.Minute = 0;
+                this.Hour += 1;
+            }
+
+            return new Time(this.Hour, this.Minute, this.Second);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}:{2}", Hour.ToString("D2"), Minute.ToString("D2"), Second.ToString("D2"));
+        }   
+    }
+
+    public class Score : ViewModelBase
+    {
+        public string PlayerName
+        {
+            get
+            {
+                return _PlayerName;
+            }
+            set
+            {
+                _PlayerName = value;
+                this.OnPropertyChanged("PlayerName");
+            }
+        }
+        private string _PlayerName { get; set; }
+        public Time ScoreTime 
+                {
+            get
+            {
+                return _ScoreTime;
+            }
+            set
+            {
+                _ScoreTime = value;
+                this.OnPropertyChanged("ScoreTime");
+            }
+        }
+        private Time _ScoreTime { get; set; }
+
+        public Score()
+        {
+            this._PlayerName = "FunUnlocker!";
+            this.Reset();
+        }
+
+        public void Reset()
+        {
+            this.ScoreTime = new Time(0, 0, 0) ;
+        }
+
+        public void Increment()
+        {
+            this.ScoreTime = this.ScoreTime.Increment();
+        }
+    }
+
+    public class Scores
+    {
+        private List<Score> scores;
+       
+        public Score HighestScore { get; private set; }
+
+        public Score CurrentScore { get; private set; }
+
+        public Scores()
+        {
+            this.scores = new List<Score>();
+            this.CurrentScore = new Score();
+        }
+
+        public void Add(Score score)
+        {
+            this.scores.Add(score);
+        }
+
+        public void Save(Score score)
+        {
+            var store = IsolatedStorageFile.GetUserStoreForApplication();
+            StreamWriter Writer = new StreamWriter(new IsolatedStorageFileStream("score.txt", FileMode.OpenOrCreate, store));
+            Writer.WriteLine("tst");
+            Writer.Close();
+        }
+
+        private void Load()
+        {
+            IsolatedStorageFile fileStorage = IsolatedStorageFile.GetUserStoreForApplication();
+            StreamReader Reader = null;
+            try
+            {
+                Reader = new StreamReader(new IsolatedStorageFileStream("score.txt", FileMode.Open, fileStorage));
+                string textFile = Reader.ReadToEnd();
+                var x = textFile;
+                Reader.Close();
+            }
+            catch
+            {
+                //Do nothing
+            }
+        }
     }
 }
