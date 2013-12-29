@@ -107,6 +107,12 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\pause.png" />
+    <Content Include="Assets\play.png" />
+    <Content Include="Properties\pause.png" />
+    <Content Include="Properties\play.png" />
+    <Content Include="Properties\repeat.png" />
+    <Content Include="Assets\repeat.png" />
     <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

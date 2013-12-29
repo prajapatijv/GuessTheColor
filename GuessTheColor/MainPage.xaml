@@ -309,7 +309,7 @@
     
     <!--Sample code showing usage of ApplicationBar-->
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True"  Mode="Default">
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True"  Mode="Minimized">
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="New Game" Click="OnNewGameClick" />
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Reset" Click="OnResetClick"/>
             <shell:ApplicationBarIconButton IconUri="/Images/appbar_button3.png" Text="Pause" Click="OnPauseClick"/>
