@@ -33,6 +33,7 @@ namespace GuessTheColor
             gameViewModel.NewGame();
         }
 
+        
         private void OnResetClick(object sender, EventArgs e)
         {
             gameViewModel.Reset();

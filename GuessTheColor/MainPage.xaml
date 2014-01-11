@@ -41,19 +41,19 @@
         </Style>
 
         <Style x:Key="clickButtonStype" TargetType="Button">
-            <Setter Property="Height" Value="60"/>
-            <Setter Property="Width" Value="60"/>
+            <Setter Property="Height" Value="70"/>
+            <Setter Property="Width" Value="70"/>
             <Setter Property="Margin" Value="0,0,5,0"/>
         </Style>
 
     </UserControl.Resources>
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent" ShowGridLines="False" Margin="0,0,0,20">
+    <Grid x:Name="LayoutRoot" Background="Transparent" ShowGridLines="False" Margin="0,5,0,20">
         <Grid.RowDefinitions>
             <RowDefinition Height="1.5*"/>
             <RowDefinition Height="7*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1.2*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="6*"></ColumnDefinition>
@@ -61,16 +61,16 @@
         </Grid.ColumnDefinitions>
 
         <!--Popup Window -->
-        <telerikPrimitives:RadModalWindow x:Name="window"
+        <telerikPrimitives:RadModalWindow x:Name="gamePaused"
                                           Background="Transparent"
                                           Placement="CenterCenter" 
-                                          IsOpen="{Binding GameOver}"
-                                          MinWidth="600">
-            
+                                          IsOpen="{Binding Paused}">
+
             <Border BorderBrush="{StaticResource PhoneBorderBrush}"
-                    BorderThickness="{StaticResource PhoneBorderThickness}" 
+                    BorderThickness="0" 
                     CornerRadius="0">
-                <Grid Background="{StaticResource PhoneBackgroundBrush}">
+
+                <Grid Background="Black"  Opacity="0.95">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -83,42 +83,106 @@
                     <StackPanel Grid.Row="0"
                                 Grid.ColumnSpan="2" VerticalAlignment="Bottom"                                    
                                 Margin="{StaticResource PhoneMargin}"
-                                MinWidth="900">
+                                >
+                        <Rectangle Width="500" Height="2" HorizontalAlignment="Left">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStopCollection>
+                                        <GradientStop Color="Transparent" Offset="0.0"></GradientStop>
+                                        <GradientStop Color="DarkOrange" Offset="0.9"></GradientStop>
+                                    </GradientStopCollection>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
+                        <TextBlock Text=" Game Paused!"  HorizontalAlignment="Center" Margin="10" FontSize="30" Style="{StaticResource PhoneTextTitle1Style}">
+                        </TextBlock>
+
+                    </StackPanel>
+                    
+                    <Button x:Name="btnResume" Grid.Row="1" Grid.Column="0" Content="Resume" BorderThickness="0" Command="{Binding ResumeCommand}"/>
+                    <Button Grid.Row="1" Grid.Column="1" Content="Exit" BorderThickness="0" Command="{Binding ExitCommand}"/>
+
+                </Grid>
+
+            </Border>
+        </telerikPrimitives:RadModalWindow>
+        <telerikPrimitives:RadModalWindow x:Name="window"
+                                          Background="Transparent"
+                                          Placement="CenterCenter" 
+                                          IsOpen="{Binding GameOver}"
+                                          MinWidth="600">
+            
+            <Border BorderBrush="{StaticResource PhoneBorderBrush}"
+                    BorderThickness="0" 
+                    CornerRadius="0">
+                
+                <Grid Background="Black" Opacity="0.95">
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Row="0"
+                                Grid.ColumnSpan="2" VerticalAlignment="Bottom"                                    
+                                Margin="{StaticResource PhoneMargin}"
+                                >
+                        <Rectangle Width="500" Height="2" HorizontalAlignment="Left">
+                            <Rectangle.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStopCollection>
+                                        <GradientStop Color="Transparent" Offset="0.0"></GradientStop>
+                                        <GradientStop Color="DarkOrange" Offset="0.9"></GradientStop>
+                                    </GradientStopCollection>
+                                </LinearGradientBrush>
+                            </Rectangle.Fill>
+                        </Rectangle>
+
                         <TextBlock TextWrapping="Wrap" FontSize="30" Style="{StaticResource PhoneTextTitle1Style}"
                                    Visibility="{Binding GameOverSuccess, Converter={StaticResource BooleanToVisibilityConverter}}">
                             Congratulations!  Well Played!
-                            <LineBreak></LineBreak>
                         </TextBlock>
 
                         <TextBlock TextWrapping="Wrap" FontSize="28" Style="{StaticResource PhoneTextTitle1Style}"
                                    Visibility="{Binding GameOverFailure, Converter={StaticResource BooleanToVisibilityConverter}}">
                             Hard luck! Try again your skills!
-                            <LineBreak></LineBreak>
                         </TextBlock>
 
                         <StackPanel Orientation="Vertical" Margin="0,0">
-                            <TextBlock FontSize="24" Style="{StaticResource PhoneTextTitle1Style}">Player Name</TextBlock>
-                            <TextBox Text="{Binding CurrentScore.PlayerName, Mode=TwoWay}" ></TextBox>
+                            <TextBox Opacity="0.90" BorderThickness="0" Text="{Binding CurrentScore.PlayerName, Mode=TwoWay}" ></TextBox>
                         </StackPanel>
                         
-                        <StackPanel Orientation="Horizontal" Margin="10,0">
-                            <TextBlock Margin="1" FontSize="28" Text="Time Taken : " Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                            <TextBlock Margin="1" FontSize="28" Text=":" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Second, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Margin="10,0">
-                            <TextBlock Margin="1" FontSize="28" Text="Best Time : " Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                            <TextBlock Margin="1" FontSize="28" Text=":" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                            <TextBlock Margin="1" FontSize="28" Text="{Binding CurrentScore.ScoreTime.Second, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
-                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                
+                                <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="10,0" HorizontalAlignment="Left">
+                                    <TextBlock Margin="1" FontSize="20" Text="Game Time  " Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                    <TextBlock Margin="1" FontSize="22" Text="{Binding CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                    <TextBlock Margin="1" FontSize="20" Text=":" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                    <TextBlock Margin="1" FontSize="22" Text="{Binding CurrentScore.ScoreTime.Second, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="20,0,0,0" HorizontalAlignment="Right">
+                                    <TextBlock Margin="1" FontSize="20" Text="Best Time  " Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                    <TextBlock Margin="1" FontSize="22" Text="{Binding CurrentScore.ScoreTime.Minute, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                    <TextBlock Margin="1" FontSize="20" Text=":" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                    <TextBlock Margin="1" FontSize="22" Text="{Binding CurrentScore.ScoreTime.Second, StringFormat=D2}" Style="{StaticResource PhoneTextTitle1Style}"></TextBlock>
+                                </StackPanel>
+                            </Grid>
 
+                        </StackPanel>
                     </StackPanel>
                     
-                    <Button x:Name="btnNewGame" Grid.Row="1" Grid.Column="0" Content="New Game" Command="{Binding OkCommand}"/>
-                    <Button x:Name="btnExit" Grid.Row="1" Grid.Column="1" Content="Back" Command="{Binding ExitCommand}"/>
-                    
+                    <Button x:Name="btnNewGame" Grid.Row="1" Grid.Column="0" Content="New Game" BorderThickness="0" Command="{Binding OkCommand}"/>
+                    <Button x:Name="btnExit" Grid.Row="1" Grid.Column="1" Content="Exit" BorderThickness="0" Command="{Binding ExitCommand}"/>
+
                 </Grid>
             </Border>
 
@@ -230,7 +294,7 @@
                 </telerikPrimitives:RadDataBoundListBox.ItemRemovedAnimation>
                 <telerikPrimitives:RadDataBoundListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="Red" BorderThickness="0" CornerRadius="0" Margin="0">
+                        <Border BorderThickness="0" CornerRadius="0" Margin="0">
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Right">
                                     <StackPanel Orientation="Horizontal" FlowDirection="LeftToRight" HorizontalAlignment="Left">
@@ -283,7 +347,7 @@
                 </TransformGroup>
             </TextBlock.RenderTransform>
         </TextBlock>
-        <TextBlock Margin="25,108,6,476" Text="{Binding Path=CurrentScore.ScoreTime.Second,StringFormat=D2}"  Style="{StaticResource PhoneTextTitle1Style}"  FontWeight="Bold" FontSize="36" Height="50" Foreground="#292b2b" UseLayoutRounding="False" d:LayoutRounding="Auto" Grid.Column="1" Grid.RowSpan="2">
+        <TextBlock Margin="25,108,4,475" Text="{Binding Path=CurrentScore.ScoreTime.Second,StringFormat=D2}"  Style="{StaticResource PhoneTextTitle1Style}"  FontWeight="Bold" FontSize="37" Height="54" Foreground="#292b2b" UseLayoutRounding="False" d:LayoutRounding="Auto" Grid.Column="1" Grid.RowSpan="2">
             <TextBlock.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform />

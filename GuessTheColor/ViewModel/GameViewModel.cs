@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Framework.MVVM;
 using System.Windows.Threading;
+using System.Windows;
 
 namespace GuessTheColor
 {
@@ -15,6 +16,8 @@ namespace GuessTheColor
         private Row currentRow;
         private ICommand okCommand;
         private ICommand exitCommand;
+        private ICommand resumeCommand;
+
         //private ICommand resetCommand;
         //private ICommand newGameCommand;
 
@@ -36,7 +39,9 @@ namespace GuessTheColor
             rows = new ObservableCollection<Row>();
             headerRow = new ObservableCollection<Row>();
             this.okCommand = new DelegateCommand(new Action<object>((p) => this.NewGame()));
-            this.exitCommand = new DelegateCommand(new Action<object>((p) => this.GameState = StateEnum.NotSet));
+            this.exitCommand = new DelegateCommand(new Action<object>((p) => Application.Current.Terminate()));
+            this.resumeCommand = new DelegateCommand(new Action<object>((p) => this.resume()));
+
             //this.newGameCommand = new DelegateCommand(new Action<object>((p) => this.NewGame()));
             //this.resetCommand = new DelegateCommand(new Action<object>((p) => this.Reset()));
 
@@ -222,6 +227,15 @@ namespace GuessTheColor
             }
         }
 
+        public ICommand ResumeCommand
+        {
+            get
+            {
+                return this.resumeCommand;
+            }
+        }
+
+        
         //public ICommand NewGameCommand
         //{
         //    get
@@ -283,7 +297,11 @@ namespace GuessTheColor
                 dtm.Stop();
                 this.Paused = true;
             }
-            else
+        }
+
+        private void resume()
+        {
+            if (!dtm.IsEnabled)
             {
                 dtm.Start();
                 this.Paused = false;
