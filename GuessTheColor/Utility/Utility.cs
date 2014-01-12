@@ -16,7 +16,7 @@ namespace GuessTheColor
             colors = new Dictionary<int, Brush>();
 
             colors.Add(1, new SolidColorBrush(Colors.Blue));
-            colors.Add(2, new SolidColorBrush(Colors.Orange));
+            colors.Add(2, new SolidColorBrush(Colors.Cyan));
             colors.Add(3, new SolidColorBrush(Colors.Yellow));
             colors.Add(4, new SolidColorBrush(Colors.Red));
             colors.Add(5, new SolidColorBrush(Colors.Green));

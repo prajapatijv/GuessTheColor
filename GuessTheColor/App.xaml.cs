@@ -57,6 +57,8 @@ namespace GuessTheColor
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
+            //Always start app in dark theme
+            ThemeManager.ToDarkTheme();
         }
 
         // Code to execute when the application is launching (eg, from Start)

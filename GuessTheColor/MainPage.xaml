@@ -70,7 +70,7 @@
                     BorderThickness="0" 
                     CornerRadius="0">
 
-                <Grid Background="Black"  Opacity="0.95">
+                <Grid Background="Black"   Opacity="0.95">
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
@@ -358,7 +358,7 @@
             </TextBlock.RenderTransform>
         </TextBlock>
 
-        <TextBlock x:Name="PageTitle" Text="guess the color" Margin="380,-130,-440,-45" Style="{StaticResource PhoneTextTitle1Style}"  FontSize="64" Height="98" Width="500" Grid.Row="2" Grid.ColumnSpan="2" Foreground="White">
+        <TextBlock x:Name="PageTitle" Text="guess the color" Margin="380,-130,-440,-45" Style="{StaticResource PhoneTextTitle1Style}"  FontSize="64" Height="98" Width="500" Grid.Row="2" Grid.ColumnSpan="2" >
             <TextBlock.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform />
